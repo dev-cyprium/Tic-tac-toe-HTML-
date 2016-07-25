@@ -1,4 +1,5 @@
 var Game = function() {
+	this.turns = 0;
 	/*
 		Initialize the game board
 	*/
@@ -30,6 +31,9 @@ var Game = function() {
 			} else {
 				gamereferance.board[row][col].state = gamereferance.activeTurn;
 				gamereferance.nextTurn();
+				gamereferance.turns++;
+				gamereferance.render(); // TODO: fix calling render twice
+				gamereferance.checkVictory();
 				gamereferance.render();
 			}
 		});
@@ -47,8 +51,31 @@ Game.prototype.render = function() {
 				case "O":
 					$("#cell-"+i+"-"+j).html(Mark.$ohtml.clone());
 					break;
+				case "DRAW":
+					$("#cell-"+i+"-"+j).children().each(function() {
+						var item_class = $(this).attr("class");
+						if(item_class == "mark-o") {
+							$(this).animate({backgroundColor: "gray"}, 750);
+						} else {
+							$(this).children().each(function() {
+								$(this).animate({backgroundColor: "gray"}, 750);
+							});
+						}
+					});
+					break;
 			}
 		}
+	}
+}
+
+Game.prototype.checkVictory = function() {
+	if(this.turns == 9) {
+		for(var i=0; i < 3; i++) {
+			for(var j=0; j < 3;j++) {
+				this.board[i][j].state = "DRAW";
+			}
+		}
+		$("h3").html("It's a draw");
 	}
 }
 
@@ -63,7 +90,7 @@ Game.getSymbolColor = function() {
 
 var Mark = function() {
 	/*
-		State can be EMPTY, X or O
+		State can be EMPTY, DRAW, X or O
 	*/
 	this.state = "EMPTY";
 }
