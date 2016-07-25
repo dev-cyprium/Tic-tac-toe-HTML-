@@ -12,7 +12,7 @@ h1, h2 {
 	position: relative;
 	width: 200px;
 	height: 200px;
-	background-color: gray;
+	background-color: #d9d9d9;
 	float: left;
 	border: 1px solid black;
 }
@@ -21,7 +21,7 @@ h1, h2 {
 	position: absolute;
 	width: 125px;
 	height: 125px;
-	background-color: blue;
+	background-color: #33adff;
 	border-radius: 100%;
 	top: 50%;
 	left: 50%;
@@ -32,7 +32,7 @@ h1, h2 {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	background-color: gray;
+	background-color: #d9d9d9;
 	width: 100px;
 	height: 100px;
 	border-radius: 100%;
