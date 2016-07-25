@@ -1,3 +1,67 @@
 h1, h2 {
 	text-align: center;
 }
+
+#game {
+	margin: auto;
+	width: 600px;
+	height: 600px;
+}
+
+.cell {
+	position: relative;
+	width: 200px;
+	height: 200px;
+	background-color: gray;
+	float: left;
+	border: 1px solid black;
+}
+
+.mark-o {
+	position: absolute;
+	width: 125px;
+	height: 125px;
+	background-color: blue;
+	border-radius: 100%;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.inner-o {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background-color: gray;
+	width: 100px;
+	height: 100px;
+	border-radius: 100%;
+	transform: translate(-50%, -50%);
+}
+
+.mark-x {
+	position: relative;
+	width: 125px;
+	height: 125px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.left-part-x {
+	position: absolute;
+	width: 30px;
+	height: 100%;
+	background-color: crimson;
+	left: 40%;
+	transform: rotateZ(-45deg);
+}
+
+.right-part-x {
+	position: absolute;
+	width: 30px;
+	height: 100%;
+	background-color: crimson;
+	left: 40%;
+	transform: rotateZ(45deg);
+}
