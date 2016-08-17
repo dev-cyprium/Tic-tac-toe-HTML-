@@ -1,5 +1,6 @@
 var Game = function() {
 	this.turns = 0;
+	this.gameOver = false;
 	/*
 		Initialize the game board
 	*/
@@ -26,15 +27,17 @@ var Game = function() {
 		$(this).click(function() {
 			var row = parseInt(this.id.charAt(5));
 			var col = parseInt(this.id.charAt(7));
-			if(gamereferance.board[row][col].state != "EMPTY") {
+			if(gamereferance.board[row][col].state != "EMPTY" && !gamereferance.gameOver) {
 				alert("wrong move!");
-			} else {
+			} else if(!gamereferance.gameOver) {
 				gamereferance.board[row][col].state = gamereferance.activeTurn;
 				gamereferance.nextTurn();
 				gamereferance.turns++;
 				gamereferance.render(); // TODO: fix calling render twice
 				gamereferance.checkVictory();
 				gamereferance.render();
+			} else {
+				alert("Game is over.");
 			}
 		});
 	});
@@ -76,7 +79,78 @@ Game.prototype.checkVictory = function() {
 			}
 		}
 		$("h3").html("It's a draw");
+		return;
 	}
+	var mark = (this.activeTurn == "X") ? "O" : "X"; // Swap the turn, so the last player is checked
+	var counter = 0;
+	var cellsToMark = [];
+	// Horizontal conditions
+	for(var j=0; j < 3; j++) {
+		counter = 0;
+		cellsToMark = [];
+		for(var i=0; i < 3; i++) {
+			if(this.board[i][j].state == mark) {
+				counter++;
+				cellsToMark.push(new Vector2(i, j));
+				if(counter == 3) break;
+			}
+		}
+		if(counter == 3) break;
+	}
+	// Vertical conditions, skip if game is over
+	if(counter != 3) {
+		for(var i=0; i < 3; i++) {
+			counter = 0;
+			cellsToMark = [];
+			for(var j=0; j < 3; j++) {
+				if(this.board[i][j].state == mark) {
+					counter++;
+					cellsToMark.push(new Vector2(i, j));
+					if(counter == 3) break;
+				}
+			}
+			if(counter == 3) break;
+		}
+	}
+
+	// Cross conditions, skip if game is over
+	if(counter != 3) {
+		if((this.board[0][0].state == mark && this.board[1][1].state == mark && this.board[2][2].state == mark)) {
+			cellsToMark.push(new Vector2(0,0));
+			cellsToMark.push(new Vector2(1,1));
+			cellsToMark.push(new Vector2(2,2));
+			counter = 3;
+		}
+		else if((this.board[0][2].state == mark && this.board[1][1].state == mark && this.board[2][0].state == mark )) {
+			cellsToMark.push(new Vector2(0,2));
+			cellsToMark.push(new Vector2(1,1));
+			cellsToMark.push(new Vector2(2,0));
+			counter = 3;	
+		}
+
+	}
+
+	if(counter == 3) {
+		if(mark == "X") {
+			$("h3").html("The winner is <span style='color: crimson;'> X </span>");
+			for(var i=0; i < cellsToMark.length; i++) {
+				var x = cellsToMark[i].x;
+				var y = cellsToMark[i].y;
+				this.board[x][y].state = "DRAW";
+			}
+			this.gameOver = true;
+		}
+		if(mark == "O") {
+			$("h3").html("The winner is <span style='color: #33adff;'> O </span>");
+			for(var i=0; i < cellsToMark.length; i++) {
+				var x = cellsToMark[i].x;
+				var y = cellsToMark[i].y;
+				this.board[x][y].state = "DRAW";
+			}
+			this.gameOver = true;
+		}
+	}
+
 }
 
 Game.prototype.nextTurn = function() {
@@ -86,6 +160,11 @@ Game.prototype.nextTurn = function() {
 
 Game.getSymbolColor = function() {
 	return (this.activeTurn == "X") ? Mark.xColor : Mark.oColor;
+}
+
+var Vector2 = function(x, y) {
+	this.x = x;
+	this.y = y;
 }
 
 var Mark = function() {
